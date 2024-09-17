@@ -1,2 +1,5 @@
+# Ignora la carpeta node_modules
 venv
+
+# Ignora los archivos relacionados a API keys
 .env
