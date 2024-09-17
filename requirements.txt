@@ -1,0 +1,10 @@
+openai
+langroid
+whisper
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+O365
+pywhatkit
+selenium
+python-dotenv
