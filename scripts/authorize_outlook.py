@@ -2,43 +2,31 @@ import os
 from dotenv import load_dotenv
 from O365 import Account, FileSystemTokenBackend
 
-# Obtener la ruta absoluta al directorio del script
+load_dotenv(override=True)
+
+# Cargar variables de entorno
 script_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Obtener la ruta al directorio raíz del proyecto (padre de scripts/)
 project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
-
-# Construir la ruta al archivo .env en el directorio raíz
 dotenv_path = os.path.join(project_root, '.env')
-
-# **Agregar impresión para verificar la ruta al .env**
-print(f"Ruta al archivo .env: {dotenv_path}")
-
-# Cargar las variables de entorno desde el archivo .env en el directorio raíz
 load_dotenv(dotenv_path)
 
-# Ahora puedes acceder a las variables de entorno
+# Obtener variables de entorno (sin client_secret)
 client_id = os.getenv('MICROSOFT_CLIENT_ID')
-client_secret = os.getenv('MICROSOFT_CLIENT_SECRET')
 tenant_id = os.getenv('MICROSOFT_TENANT_ID')
 
-# **Agregar impresiones para verificar los valores cargados (sin exponer información sensible)**
-print(f"MICROSOFT_CLIENT_ID cargado: {'Sí' if client_id else 'No'}")
-print(f"MICROSOFT_CLIENT_SECRET cargado: {'Sí' if client_secret else 'No'}")
-print(f"MICROSOFT_TENANT_ID cargado: {'Sí' if tenant_id else 'No'}")
-
-# Verificar si las variables se cargaron correctamente
-if not client_id or not client_secret or not tenant_id:
-    print("Error: No se pudieron cargar una o más variables del archivo .env.")
+# Verificar que las variables no estén vacías
+if not client_id or not tenant_id:
+    print("Error: Las variables de entorno no se cargaron correctamente.")
     exit()
 
+# Crear las credenciales sin client_secret
+credentials = (client_id, )
 
-# Resto del código para la autenticación
 # Ruta donde se almacenará el token
 token_backend = FileSystemTokenBackend(token_path='tokens', token_filename='o365_token.txt')
 
-# Crear la cuenta con las credenciales y el backend de tokens
-account = Account((client_id, client_secret), token_backend=token_backend, tenant_id=tenant_id)
+# Crear la cuenta con auth_flow_type='public'
+account = Account(credentials, tenant_id=tenant_id, token_backend=token_backend, auth_flow_type='public')
 
 # Definir los scopes necesarios
 scopes = [
