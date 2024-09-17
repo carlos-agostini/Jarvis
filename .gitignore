@@ -3,3 +3,4 @@ venv
 
 # Ignora los archivos relacionados a API keys
 .env
+credentials.json
